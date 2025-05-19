@@ -1,5 +1,6 @@
 program test_fft64
   use fft64
+  use iso_fortran_env, only: real32
   implicit none
 
   type(fft64_t) :: z1, z2, result
