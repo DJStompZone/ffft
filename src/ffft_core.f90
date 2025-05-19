@@ -1,6 +1,6 @@
-
 module ffft_core
   use fft64
+  use iso_fortran_env, only: real32
   implicit none
   public :: fft_iterative
 
@@ -9,20 +9,18 @@ contains
   subroutine fft_iterative(data, N)
     integer, intent(in) :: N
     type(fft64_t), intent(inout) :: data(N)
-    integer :: i, j, k, m, n, stage
-    integer :: half_size, step, index1, index2
-    real(real32) :: angle, wr, wi, tr, ti
-    type(fft64_t) :: t, u, temp
 
-    ! Bit reversal permutation
+    integer :: i, j, k, m, stage, half_size, step, index1, index2
+    real(real32) :: angle, wr, wi
+    type(fft64_t) :: t, u
+
     call bit_reverse_reorder(data, N)
 
-    ! FFT main loop (radix-2 Cooley-Tukey)
     m = 1
     do while (m < N)
       step = 2 * m
       do k = 0, m - 1
-        angle = -2.0 * 3.14159265358979 * k / step
+        angle = -2.0_real32 * 3.1415927_real32 * k / step
         wr = cos(angle)
         wi = sin(angle)
         do j = k, N - 1, step
@@ -41,9 +39,9 @@ contains
   end subroutine fft_iterative
 
   subroutine bit_reverse_reorder(data, N)
-    type(fft64_t), intent(inout) :: data(N)
     integer, intent(in) :: N
-    integer :: i, j, bit, n
+    type(fft64_t), intent(inout) :: data(N)
+    integer :: i, j, bit
     type(fft64_t) :: temp
 
     j = 0
