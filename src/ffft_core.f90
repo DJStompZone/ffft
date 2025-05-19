@@ -1,3 +1,4 @@
+
 module ffft_core
   use fft64
   use iso_fortran_env, only: real32
@@ -6,13 +7,13 @@ module ffft_core
 
 contains
 
-  subroutine fft_iterative(data, N)
+  subroutine fft_iterative(data, N, twiddles)
     integer, intent(in) :: N
     type(fft64_t), intent(inout) :: data(N)
+    type(fft64_t), intent(in) :: twiddles(N/2)
 
-    integer :: i, j, k, m, stage, half_size, step, index1, index2
-    real(real32) :: angle, wr, wi
-    type(fft64_t) :: t, u
+    integer :: i, j, k, m, step, index1, index2
+    type(fft64_t) :: t, u, w
 
     call bit_reverse_reorder(data, N)
 
@@ -20,15 +21,13 @@ contains
     do while (m < N)
       step = 2 * m
       do k = 0, m - 1
-        angle = -2.0_real32 * 3.1415927_real32 * k / step
-        wr = cos(angle)
-        wi = sin(angle)
+        w = twiddles((k*N)/step + 1)
         do j = k, N - 1, step
           index1 = j + 1
           index2 = j + m + 1
 
           u = data(index1)
-          t = multiply(from_real_imag(wr, wi), data(index2))
+          t = multiply(w, data(index2))
 
           data(index1) = add(u, t)
           data(index2) = from_real_imag(get_real(u) - get_real(t), get_imag(u) - get_imag(t))
