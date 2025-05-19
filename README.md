@@ -1,7 +1,6 @@
 # FFFT - Fortran Fast Fourier Transform
 
-**FFFT** is a modern Fortran implementation of a 64-bit optimized Fast Fourier Transform core,  
-designed to push FFT to the limits of numerical performance.
+**FFFT** is a modern Fortran implementation of a 64-bit optimized Fast Fourier Transform core, designed to push FFT to the limits of numerical performance.
 
 ## Features
 
@@ -54,16 +53,17 @@ Benchmark options:
 - `--noprogress`: Disable the progress bar
 - `-e`: Specify alternate FFT binary location
 
-### Example
-
+**Example:**
 ```bash
-echo 'running performance tests, please wait...' && python3 bench/perf_test.py -e ../ffft -n 5000 --noprogress
+echo 'running performance tests, please wait...'
+python3 bench/perf_test.py -e ../ffft -n 5000 --noprogress
 ```
 
-Or use the wrapper script:
+A wrapper script is provided for convenience.
+This builds a fresh binary and runs a quick 1000-iteration benchmark using bench/perf_test.py:
 
 ```bash
 bash test.sh
 ```
 
-This builds a fresh binary and runs a quick 1000-iteration benchmark using bench/perf_test.py.
+
